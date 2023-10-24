@@ -4,11 +4,11 @@ out = "out"
 libs = ["lib"]
 solc = "0.8.21"
 
-chain_id = 80001
+chain_id = 11155111
 remappings = ["@openzeppelin/=lib/openzeppelin-contracts/" ,"@chainlink/=lib/chainlink/", "@openzeppelin-upgradeable/=lib/openzeppelin-contracts-upgradeable/", "@chiruLabs/=lib/ERC721A-Upgradeable"]
 
 [rpc_endpoints]
-mumbai = "https://polygon-mumbai.gateway.tenderly.co/7NtAdP7Fa9vAxjdoUNZARB"
+sepolia = "https://sepolia.gateway.tenderly.co/7NtAdP7Fa9vAxjdoUNZARB"
 
 [etherscan]
-mumbai = { key = "${MUMBAI_KEY}" }
+sepolia = { key = "${SEPOLIA_KEY}" }
