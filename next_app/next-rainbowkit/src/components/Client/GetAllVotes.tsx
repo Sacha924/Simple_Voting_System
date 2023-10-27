@@ -1,6 +1,6 @@
 'use client'
 
-import { useContractRead, useWalletClient } from 'wagmi'
+import { useContractRead, useContractWrite, useWalletClient } from 'wagmi'
 import { wagmiContractConfig } from './../contracts'
 import { BaseError } from 'viem'
 import { useState } from 'react'
@@ -20,7 +20,12 @@ export default function GetAllVotes() {
         functionName: 'getMyVotes',
         account: walletClient?.account,
     })
-^
+
+    const { write, data: dataCast, error: errorCast, isLoading, isError } = useContractWrite({
+        ...wagmiContractConfig,
+        functionName: 'castVote',
+        account: walletClient?.account,
+    })
 
 
     const renderVote = (index: number) => {
@@ -38,10 +43,13 @@ export default function GetAllVotes() {
                 <p><strong>Description:</strong> {data ? data[3][index] : "N/A"}</p>
                 <p><strong>Yes Count:</strong> {(data ? data[4][index] : 0).toString()}</p>
                 <p><strong>No Count:</strong> {(data ? data[5][index] : 0).toString()}</p>
+                <img width="48" height="48" src="https://img.icons8.com/emoji/48/thumbs-up-medium-skin-tone.png" alt="thumbs-up-medium-skin-tone" onClick={() => write({
+                    args: [data ? data[0][index] : BigInt(0), true],
+                })} />
+                <img width="48" height="48" src="https://img.icons8.com/emoji/48/thumbs-down-medium-dark-skin-tone.png" alt="thumbs-down-medium-dark-skin-tone" onClick={() => write({
+                    args: [data ? data[0][index] : BigInt(0), false],
+                })} />
 
-                {/* RENDRE LE YES COUNT ET LE NO COUNT CLICKABLE POUR VOTER DIRECTEMENT, SI QUAND ON CLIQUE CELA REVERT ON RENVOIE UN MESSAGE D ERREUR 
-                DISANT QUE SOIT LE GARS A DEJA VOTE SOIT LA DEADLINE EST FINIE
-                OU ALORS MIEUX : rendre le truc non clickable quand la deadline est passé, autrement dit si datetime now > deadline */}
             </div>
         );
     };
