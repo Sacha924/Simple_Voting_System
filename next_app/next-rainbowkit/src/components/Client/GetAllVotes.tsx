@@ -10,6 +10,15 @@ export default function GetAllVotes() {
         ...wagmiContractConfig,
         functionName: 'getVotes',
     })
+
+    // l'idée c'est dans le main component j'ai une variable qui se set à True ou False en fonction de si le user veut les votes auquels il a participé ou tous les votes. S'il veut que les votes auxquels il a participé dans ce cas ma variable est True et est passé dans ce component et je vais faire un filter pour afficher uniquement les votes dont les ids sont dans le tableau d'id. Mais pour le moment je pense qu'il y a un problème avec le contrat.
+    const { data: votedId } = useContractRead({
+        ...wagmiContractConfig,
+        functionName: 'getMyVotes',
+    })
+    console.log(votedId)
+
+
     const renderVote = (index: number) => {
         return (
             <div style={{
@@ -26,6 +35,9 @@ export default function GetAllVotes() {
                 <p><strong>Yes Count:</strong> {(data ? data[4][index] : 0).toString()}</p>
                 <p><strong>No Count:</strong> {(data ? data[5][index] : 0).toString()}</p>
 
+                {/* RENDRE LE YES COUNT ET LE NO COUNT CLICKABLE POUR VOTER DIRECTEMENT, SI QUAND ON CLIQUE CELA REVERT ON RENVOIE UN MESSAGE D ERREUR 
+                DISANT QUE SOIT LE GARS A DEJA VOTE SOIT LA DEADLINE EST FINIE
+                OU ALORS MIEUX : rendre le truc non clickable quand la deadline est passé, autrement dit si datetime now > deadline */}
             </div>
         );
     };
