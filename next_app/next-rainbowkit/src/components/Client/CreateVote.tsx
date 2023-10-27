@@ -47,52 +47,64 @@ export default function CreateVote() {
     }
 
     return (
-        <div>
-            <button onClick={() => {
-                if (showModal) {
-                    setButtonText('Create a Proposal')
-                } else {
-                    setButtonText('Close')
-                }
-                setShowModal(!showModal)
-            }
-            }>
+        <div className="p-4">
+            <button 
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+                onClick={() => {
+                    if (showModal) {
+                        setButtonText('Create a Proposal')
+                    } else {
+                        setButtonText('Close')
+                    }
+                    setShowModal(!showModal)
+                }}
+            >
                 {buttonText}
             </button>
             {showModal ? (
-                <>
-                    <form onSubmit={handleSubmit}>
-                        <input
-                            value={formData.deadline}
-                            onChange={handleChange}
-                            placeholder={unixTime.toString()}
-                            type="text"
-                            name="deadline"
-                            required
-                        />
-                        <input
-                            value={formData.description}
-                            onChange={handleChange}
-                            placeholder="Description"
-                            type="text"
-                            name="description"
-                            required
-                        />
-                        <button type="submit">Submit</button>
+                <div className="mt-4">
+                    <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={handleSubmit}>
+                        <div className="mb-4">
+                            <input
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                value={formData.deadline}
+                                onChange={handleChange}
+                                placeholder={unixTime.toString()}
+                                type="text"
+                                name="deadline"
+                                required
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <input
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                value={formData.description}
+                                onChange={handleChange}
+                                placeholder="Description"
+                                type="text"
+                                name="description"
+                                required
+                            />
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" type="submit">
+                                Submit
+                            </button>
+                        </div>
                     </form>
-                </>
+                </div>
             ) : null}
-            {isLoading && <div>Check wallet...</div>}
-            {isPending && <div>Transaction pending...</div>}
+            {isLoading && <div className="text-blue-500">Check wallet...</div>}
+            {isPending && <div className="text-blue-500">Transaction pending...</div>}
             {isSuccess && (
-                <>
+                <div className="mt-4">
                     <div>Transaction Hash: {data?.hash}</div>
                     <div>
-                        Transaction Receipt: <pre>{stringify(receipt, null, 2)}</pre>
+                        Transaction Receipt: <pre className="bg-gray-100 p-2 rounded">{stringify(receipt, null, 2)}</pre>
                     </div>
-                </>
+                </div>
             )}
-            {isError && <div>{(error as BaseError)?.shortMessage}</div>}
+            {isError && <div className="text-red-500">{(error as BaseError)?.shortMessage}</div>}
         </div>
     )
 }

@@ -3,20 +3,22 @@ import { ConnectButton } from '../components/Client/ConnectButton'
 import { Connected } from '../components/Client/Connected'
 import GetAllVotes from "./../components/Client/GetAllVotes"
 import CreateVote from '../components/Client/CreateVote'
+import "./../styles/global.css"
 export function Page() {
 
   return (
     <>
-      <div style={{ "display": "flex" }}>
-        <h1>VOTING SYSTEM</h1>
-        <ConnectButton />
-      </div>
+      <div className="p-4">
+        <div className="flex items-center justify-between mb-12">
+          <h1 className="text-3xl font-bold">VOTING SYSTEM</h1>
+          <ConnectButton />
+        </div>
 
-      <Connected>
-        <CreateVote/>
-        <GetAllVotes/>
-        
-      </Connected>
+        <Connected>
+          <GetAllVotes />
+          <CreateVote />
+        </Connected>
+      </div>
     </>
   )
 }
