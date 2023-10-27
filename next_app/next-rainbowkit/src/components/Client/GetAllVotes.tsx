@@ -2,14 +2,15 @@
 
 import { useContractRead, useContractWrite, useWalletClient } from 'wagmi'
 import { wagmiContractConfig } from './../contracts'
-import { BaseError } from 'viem'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import ReactDOM from 'react-dom'
 
 
 
 export default function GetAllVotes() {
     const [personalVoteDisplay, setPersonalVoteDisplay] = useState(false)
-    const { data, error, isRefetching, refetch } = useContractRead({
+    const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
+    const { data, isRefetching, refetch } = useContractRead({
         ...wagmiContractConfig,
         functionName: 'getVotes',
     })
@@ -21,12 +22,21 @@ export default function GetAllVotes() {
         account: walletClient?.account,
     })
 
-    const { write, data: dataCast, error: errorCast, isLoading, isError } = useContractWrite({
+    const { write, error: errorCast } = useContractWrite({
         ...wagmiContractConfig,
         functionName: 'castVote',
         account: walletClient?.account,
     })
 
+    const toggleErrorModal = () => {
+        setIsErrorModalOpen(!isErrorModalOpen);
+    };
+
+    useEffect(() => {
+        if (errorCast) {
+            toggleErrorModal();
+        }
+    }, [errorCast]);
 
     const renderVote = (index: number) => {
         return (
@@ -54,6 +64,47 @@ export default function GetAllVotes() {
         );
     };
 
+    function DisplayError({ error }: any) {
+        if (!error) return null;
+
+        const errorMessage = error.message.split(":")[1]?.trim();
+        const contractFunction = error.message.match(/function: (.+?)\(/)?.[1];
+        const args = error.message.match(/args: (.+?)\)/)?.[1] + ")"; 
+        const sender = error.message.match(/sender: (.+)/)?.[1];
+
+        return ReactDOM.createPortal(
+            <div style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}>
+                <div style={{
+                    background: '#fff',
+                    padding: '16px',
+                    borderRadius: '8px',
+                    maxWidth: '500px',
+                    width: '100%',
+                }}>
+                    <h4>Error Occurred!</h4>
+                    <p><strong>Message:</strong> {errorMessage}</p>
+                    <p><strong>Function:</strong> {contractFunction}</p>
+                    <p><strong>Arguments:</strong> {args}</p>
+                    <p><strong>Sender:</strong> {sender}</p>
+                    <p>Refer to the <a href="https://viem.sh/docs/contract/simulateContract.html">documentation</a> for more details.</p>
+                    <button onClick={toggleErrorModal}>Close</button>
+                </div>
+            </div>,
+            document.body
+        );
+    };
+
+
     return (
         <>
             <h1>Votes of the Community:</h1>
@@ -77,7 +128,7 @@ export default function GetAllVotes() {
             >
                 {isRefetching ? 'loading...' : 'refetch'}
             </button>
-            {error && <div>{(error as BaseError).shortMessage}</div>}
+            {isErrorModalOpen && <DisplayError error={errorCast} />}
         </>
     );
 }
