@@ -1,22 +1,26 @@
 'use client'
 
-import { useContractRead } from 'wagmi'
+import { useContractRead, useWalletClient } from 'wagmi'
 import { wagmiContractConfig } from './../contracts'
 import { BaseError } from 'viem'
+import { useState } from 'react'
+
 
 
 export default function GetAllVotes() {
+    const [personalVoteDisplay, setPersonalVoteDisplay] = useState(false)
     const { data, error, isRefetching, refetch } = useContractRead({
         ...wagmiContractConfig,
         functionName: 'getVotes',
     })
+    const { data: walletClient } = useWalletClient()
 
-    // l'idée c'est dans le main component j'ai une variable qui se set à True ou False en fonction de si le user veut les votes auquels il a participé ou tous les votes. S'il veut que les votes auxquels il a participé dans ce cas ma variable est True et est passé dans ce component et je vais faire un filter pour afficher uniquement les votes dont les ids sont dans le tableau d'id. Mais pour le moment je pense qu'il y a un problème avec le contrat.
     const { data: votedId } = useContractRead({
         ...wagmiContractConfig,
         functionName: 'getMyVotes',
+        account: walletClient?.account,
     })
-    console.log(votedId)
+^
 
 
     const renderVote = (index: number) => {
@@ -45,7 +49,19 @@ export default function GetAllVotes() {
     return (
         <>
             <h1>Votes of the Community:</h1>
-            {data && data[0] && data[0].map((_, index) => renderVote(index))}
+            <p>Sort by
+                <button onClick={() => setPersonalVoteDisplay(false)}> ALL </button>
+                <button onClick={() => setPersonalVoteDisplay(true)}> My Contribution </button>
+            </p>
+
+            {!personalVoteDisplay && data && data[0] && data[0].map((_, index) => renderVote(index))}
+            {personalVoteDisplay && data && data[0] && data[0].map((_, index) => {
+                if (votedId && votedId.includes(BigInt(index))) {
+                    return renderVote(index);
+                }
+                return null;
+            })}
+
             <button
                 disabled={isRefetching}
                 onClick={() => refetch()}
