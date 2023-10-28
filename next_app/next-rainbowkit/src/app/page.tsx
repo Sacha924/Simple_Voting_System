@@ -4,8 +4,8 @@ import { Connected } from '../components/Client/Connected'
 import GetAllVotes from "./../components/Client/GetAllVotes"
 import CreateVote from '../components/Client/CreateVote'
 import "./../styles/global.css"
-export function Page() {
 
+export default function Page() {
   return (
     <>
       <div className="p-4">
@@ -23,4 +23,3 @@ export function Page() {
   )
 }
 
-export default Page

@@ -4,6 +4,7 @@ import { useContractRead, useContractWrite, useWalletClient } from 'wagmi'
 import { wagmiContractConfig } from './../contracts'
 import { useEffect, useState } from 'react'
 import ReactDOM from 'react-dom'
+import Image from 'next/image'
 
 
 
@@ -42,10 +43,10 @@ export default function GetAllVotes() {
         return (
             <div className="relative p-4 m-2 border border-gray-300 rounded bg-gray-100 flex flex-col items-start min-w-[450px]" key={index}>
                 <div className="absolute top-2 right-2 flex space-x-2">
-                    <img width="48" height="48" src="https://img.icons8.com/ios-glyphs/30/thumb-up--v1.png" alt="thumbs-up-medium-skin-tone" onClick={() => write({
+                    <Image width="48" height="48" src="https://img.icons8.com/ios-glyphs/30/thumb-up--v1.png" alt="thumbs-up-medium-skin-tone" onClick={() => write({
                         args: [data ? data[0][index] : BigInt(0), true],
                     })} />
-                    <img width="48" height="48" src="https://img.icons8.com/ios-glyphs/30/thumbs-down.png" alt="thumbs-down-medium-dark-skin-tone" onClick={() => write({
+                    <Image width="48" height="48" src="https://img.icons8.com/ios-glyphs/30/thumbs-down.png" alt="thumbs-down-medium-dark-skin-tone" onClick={() => write({
                         args: [data ? data[0][index] : BigInt(0), false],
                     })} />
                 </div>
