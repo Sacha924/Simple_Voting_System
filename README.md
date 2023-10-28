@@ -29,6 +29,11 @@
 
 • Deploy on sepolia and on VERCEL (2 pts) <img width="24" height="24" src="https://img.icons8.com/emoji/48/check-mark-emoji.png" alt="check-mark-emoji"/>
 
+<br/>
+
+Link to the site : https://simple-voting-system-theta.vercel.app/
+
+You can click on the thumb to vote for a proposal
 
 <br/>
 <br/>
